@@ -41,10 +41,6 @@ if __name__ == "__main__":
         # Process the image
         image = process_image_format(uploaded_file)
 
-
-
-
-
         st.write("Please click on this image to select the pixel coordinates")
         value = streamlit_image_coordinates(image)
 
