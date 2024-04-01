@@ -38,6 +38,16 @@ if __name__ == "__main__":
 
 
     if uploaded_file is not None:
+
+        # Check if a new file is uploaded by comparing it with the stored file info in the session state
+        file_info = f"{uploaded_file.name}-{uploaded_file.size}"
+
+        if "file_info" not in st.session_state or st.session_state["file_info"] != file_info:
+            keys_to_reset = ["submitted", "masks", "prev_value", "input_point", "input_label"]
+            for key in keys_to_reset:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.session_state["file_info"] = file_info
         # Process the image
         image = process_image_format(uploaded_file)
 

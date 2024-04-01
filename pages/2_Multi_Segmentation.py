@@ -2,6 +2,7 @@ import streamlit as st
 from utilities.utilities import *
 from streamlit_image_coordinates import streamlit_image_coordinates
 import matplotlib.pyplot as plt
+import matplotlib
 import io
 from streamlit_extras import grid
 
@@ -14,7 +15,8 @@ def display_mask(mask):
 def mask_to_colored_pil(mask, colormap='viridis'):
     # Apply colormap
     normed_data = (mask - np.min(mask)) / (np.max(mask) - np.min(mask))
-    mapped_data = plt.cm.get_cmap(colormap)(normed_data)
+
+    mapped_data = matplotlib.colormaps[colormap](normed_data)
 
     # Convert to PIL Image
     img_data = (mapped_data[:, :, :3] * 255).astype(np.uint8)
@@ -67,6 +69,16 @@ if __name__ == "__main__":
 
 
     if uploaded_file is not None:
+
+        file_info = f"{uploaded_file.name}-{uploaded_file.size}"
+
+        if "file_info" not in st.session_state or st.session_state["file_info"] != file_info:
+            keys_to_reset = ["submitted", "masks", "prev_value", "input_point", "input_label", "selected_masks"]
+            for key in keys_to_reset:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.session_state["file_info"] = file_info
+
         # Process the image
         image = process_image_format(uploaded_file)
 
@@ -214,7 +226,7 @@ if __name__ == "__main__":
                     if st.button("Combine Masks", key="combine_masks"):
                         combined_mask = combine_masks_with_labels(st.session_state["selected_masks"])
 
-                        # Assuming you have a function to convert the combined mask to a displayable format
+                        # converting for rendering
                         mask_image_combined = mask_to_colored_pil(combined_mask)
 
                         # Display the combined mask
