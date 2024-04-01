@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 import streamlit as st
 import matplotlib
-
+from utilities.utilities import mask_to_colored_pil
 def load_and_display_mask_with_pil(mask_file):
     """
     Displays a mask using PIL, with normalization if necessary.
@@ -30,19 +30,19 @@ def load_and_display_mask_with_pil(mask_file):
 
     return mask_image
 
-def mask_to_colored_pil(mask, colormap='viridis'):
-    # load the mask, convert it into np format and change dtype to int32
-    mask = np.load(mask, allow_pickle=True).astype(np.int32)
-
-    # Apply colormap
-    normed_data = (mask - np.min(mask)) / (np.max(mask) - np.min(mask))
-
-    mapped_data = matplotlib.colormaps[colormap](normed_data)
-
-    # Convert to PIL Image
-    img_data = (mapped_data[:, :, :3] * 255).astype(np.uint8)
-    img = Image.fromarray(img_data)
-    return img
+# def mask_to_colored_pil(mask, colormap='viridis'):
+#     # load the mask, convert it into np format and change dtype to int32
+#     mask = np.load(mask, allow_pickle=True).astype(np.int32)
+#
+#     # Apply colormap
+#     normed_data = (mask - np.min(mask)) / (np.max(mask) - np.min(mask))
+#
+#     mapped_data = matplotlib.colormaps[colormap](normed_data)
+#
+#     # Convert to PIL Image
+#     img_data = (mapped_data[:, :, :3] * 255).astype(np.uint8)
+#     img = Image.fromarray(img_data)
+#     return img
 
 if __name__=="__main__":
     st.set_page_config(layout="wide", page_title="PixelMaster")

@@ -1,10 +1,10 @@
 from PIL import Image
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
 import torch
-
+import matplotlib
 import numpy as np
 import cv2
-
+import io
 def process_image_format(file):
     image = np.load(file, allow_pickle=True)
 
@@ -99,3 +99,27 @@ def generate_mask_image(mask, image, random_color=False):
     image_pil.paste(mask_pil, mask=mask_pil)
 
     return image_pil
+
+def mask_to_colored_pil(mask, colormap='viridis'):
+    # load the mask, convert it into np format and change dtype to int32
+    mask = np.load(mask, allow_pickle=True).astype(np.int32)
+
+    # Apply colormap
+    normed_data = (mask - np.min(mask)) / (np.max(mask) - np.min(mask))
+
+    mapped_data = matplotlib.colormaps[colormap](normed_data)
+
+    # Convert to PIL Image
+    img_data = (mapped_data[:, :, :3] * 255).astype(np.uint8)
+    img = Image.fromarray(img_data)
+    return img
+
+def get_mask_npy(mask):
+    # Convert the mask to a byte stream
+
+    # Convert the mask to np.int32 type
+    mask_int32 = mask.astype(np.int32)
+    buffer = io.BytesIO()
+    np.save(buffer, mask_int32, allow_pickle=True)
+    buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
+    return buffer

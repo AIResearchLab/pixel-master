@@ -12,13 +12,6 @@ def display_mask(mask):
     return mask
 
 
-# Add this function to convert the mask to a BytesIO object and return it
-def get_mask_npy(mask):
-    # Convert the mask to a byte stream
-    buffer = io.BytesIO()
-    np.save(buffer, mask, allow_pickle=True)
-    buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
-    return buffer
 
 
 if __name__ == "__main__":
@@ -101,8 +94,7 @@ if __name__ == "__main__":
                             masks, scores, logits = generate_masks(st.session_state['sam_predictor'], input_point, input_label)
 
                             st.session_state['masks'] = masks
-                            # Now, this should work as expected
-                            print(scores)
+
                             cols = st.columns(3)  # Create three columns
 
                         if st.button("Preview", key="preview1"):

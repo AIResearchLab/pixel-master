@@ -1,23 +1,13 @@
 import streamlit as st
 from utilities.utilities import *
 from streamlit_image_coordinates import streamlit_image_coordinates
-import matplotlib.pyplot as plt
+
 import matplotlib
-import io
-from streamlit_extras import grid
 
-def get_mask_npy(mask):
-    # Convert the mask to a byte stream
-    buffer = io.BytesIO()
-    np.save(buffer, mask, allow_pickle=True)
-    buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
-    return buffer
 
-def display_mask(mask):
-    """Converts a single-channel mask to a 3-channel image for display."""
-    if len(mask.shape) == 2:  # If the mask is single-channel, convert it to 3-channel
-        mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
-    return mask
+
+
+
 
 def mask_to_colored_pil(mask, colormap='viridis'):
     # Apply colormap
@@ -45,7 +35,7 @@ def combine_masks_with_labels(masks_with_labels):
     if not masks_with_labels:
         return None  # or an appropriate default value or error handling
 
-    # Assuming all masks are of the same shape, initialize combined_mask as zeros
+    #  initialize combined_mask as zeros
     shape_of_first_mask = masks_with_labels[0]['mask'].shape
     combined_mask = np.zeros(shape_of_first_mask, dtype=np.int32)
 
@@ -138,12 +128,11 @@ if __name__ == "__main__":
                         if st.button("Generate Masks"):
                             # set predictor to image
                             st.session_state['sam_predictor'].set_image(st.session_state['original_image'])
-                            # Assuming sam_predictor is available here
+
                             masks, scores, logits = generate_masks(st.session_state['sam_predictor'], input_point, input_label)
 
                             st.session_state['masks'] = masks
-                            # Now, this should work as expected
-                            print(scores)
+
                             cols = st.columns(3)  # Create three columns
 
                         if st.button("Preview", key="preview1"):
