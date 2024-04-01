@@ -6,6 +6,13 @@ import matplotlib
 import io
 from streamlit_extras import grid
 
+def get_mask_npy(mask):
+    # Convert the mask to a byte stream
+    buffer = io.BytesIO()
+    np.save(buffer, mask, allow_pickle=True)
+    buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
+    return buffer
+
 def display_mask(mask):
     """Converts a single-channel mask to a 3-channel image for display."""
     if len(mask.shape) == 2:  # If the mask is single-channel, convert it to 3-channel
@@ -232,3 +239,12 @@ if __name__ == "__main__":
                         # Display the combined mask
                         st.image(mask_image_combined, caption="Combined Mask Visualization", use_column_width=True)
 
+                        mask_npy_bytes = get_mask_npy(combined_mask)
+
+                        # Add a download button for the combined mask
+                        st.download_button(
+                            label="Download Combined Mask",
+                            data=mask_npy_bytes,
+                            file_name="combined_mask.npy",
+                            mime="application/octet-stream"
+                        )
