@@ -12,13 +12,6 @@ def display_mask(mask):
     return mask
 
 
-# Add this function to convert the mask to a BytesIO object and return it
-def get_mask_npy(mask):
-    # Convert the mask to a byte stream
-    buffer = io.BytesIO()
-    np.save(buffer, mask, allow_pickle=True)
-    buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
-    return buffer
 
 
 if __name__ == "__main__":
@@ -38,12 +31,18 @@ if __name__ == "__main__":
 
 
     if uploaded_file is not None:
+
+        # Check if a new file is uploaded by comparing it with the stored file info in the session state
+        file_info = f"{uploaded_file.name}-{uploaded_file.size}"
+
+        if "file_info" not in st.session_state or st.session_state["file_info"] != file_info:
+            keys_to_reset = ["submitted", "masks", "prev_value", "input_point", "input_label"]
+            for key in keys_to_reset:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.session_state["file_info"] = file_info
         # Process the image
         image = process_image_format(uploaded_file)
-
-
-
-
 
         st.write("Please click on this image to select the pixel coordinates")
         value = streamlit_image_coordinates(image)
@@ -95,8 +94,7 @@ if __name__ == "__main__":
                             masks, scores, logits = generate_masks(st.session_state['sam_predictor'], input_point, input_label)
 
                             st.session_state['masks'] = masks
-                            # Now, this should work as expected
-                            print(scores)
+
                             cols = st.columns(3)  # Create three columns
 
                         if st.button("Preview", key="preview1"):
