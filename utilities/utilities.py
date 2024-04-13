@@ -42,7 +42,7 @@ def show_points(coords, labels, ax, marker_size=375):
 
 
 def init_sam():
-    sam_checkpoint = "model\\sam_vit_h_4b8939.pth"
+    sam_checkpoint = "model/sam_vit_h_4b8939.pth"
     model_type = "vit_h"
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
