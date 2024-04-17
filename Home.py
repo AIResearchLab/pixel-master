@@ -6,7 +6,7 @@ from PIL import Image
 
 def main():
     st.set_page_config(layout="wide", page_title="PixelMaster")
-    st.image('assets\modified_logo.png', width=250)
+    st.image('assets/modified_logo.png', width=250)
     footer = """
         ---
             University of Canberra, Bruce ACT 2617 Australia
