@@ -83,13 +83,6 @@ def reset_session_state():
 if __name__=="__main__":
     st.set_page_config(layout="wide", page_title="PixelMaster")
     st.title("Image Processing")
-
-    # load all the required items
-    load_files_for_image_processing()
-
-    if "processed_image" not in st.session_state:
-        st.session_state.processed_image = None
-
     # Upload the raw image
     uploaded_raw_img = st.file_uploader("Upload Raw Image", key="uploaded_raw_img")
     if uploaded_raw_img is not None and uploaded_raw_img != st.session_state.get('uploaded_raw_img_last', None):
@@ -102,6 +95,13 @@ if __name__=="__main__":
                                                                                          None):
         st.session_state.uploaded_thermal_img_last = uploaded_thermal_img
         reset_session_state()  # Reset session state when a new thermal image is uploaded
+    # load all the required items
+    load_files_for_image_processing()
+
+    if "processed_image" not in st.session_state:
+        st.session_state["processed_image"] = None
+
+
 
     if uploaded_raw_img is not None and uploaded_thermal_img is not None:
         # input raw_image
@@ -110,30 +110,34 @@ if __name__=="__main__":
 
         display = img_he(raw_img)
 
-        st.subheader("Histogram Equalization")
-        fig1, ax1 = plt.subplots()
-        ax1.imshow(display, 'gray')
-        ax1.axis('off')
-        st.pyplot(fig1)
+        prev_col1, prev_col2 = st.columns(2)
+        with prev_col1:
+            st.subheader("Histogram Equalization for the MultiSpectral")
+            fig1, ax1 = plt.subplots()
+            ax1.imshow(display, 'gray')
+            ax1.axis('off')
+            st.pyplot(fig1)
 
-        st.subheader("Thermal Image")
-        fig1, ax1 = plt.subplots()
-        ax1.imshow(therm)
-        ax1.axis('off')
-        st.pyplot(fig1)
+        with prev_col2:
+            st.subheader("Thermal Image")
+            fig1, ax1 = plt.subplots()
+            ax1.imshow(therm)
+            ax1.axis('off')
+            st.pyplot(fig1)
 
         if st.button("Preprocess Image"):
             st.session_state.processed_image = process_image(raw_img, therm)
 
         if st.session_state["processed_image"] is not None:
-            fig, ax = plt.subplots()
-            # Specify the number of rows and columns for the plot
-            nrows = 4
-            ncols = 4
+            with st.expander("Preview Processed Image"):
+                fig, ax = plt.subplots()
+                # Specify the number of rows and columns for the plot
+                nrows = 4
+                ncols = 4
 
-            # Display the plot in Streamlit
-            fig = plot_channels(st.session_state["processed_image"], nrows, ncols)
-            st.pyplot(fig)
+                # Display the plot in Streamlit
+                fig = plot_channels(st.session_state["processed_image"], nrows, ncols)
+                st.pyplot(fig)
 
             # Get bytes buffer from the numpy array (image data)
             downloadable_data_cube = get_image_download_link(st.session_state["processed_image"])
