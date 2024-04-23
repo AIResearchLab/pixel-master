@@ -5,6 +5,8 @@ import matplotlib
 import numpy as np
 import cv2
 import io
+from utilities.image_processing import TrashIm
+
 def process_image_format(file):
     image = np.load(file, allow_pickle=True)
 
@@ -123,3 +125,24 @@ def get_mask_npy(mask):
     np.save(buffer, mask_int32, allow_pickle=True)
     buffer.seek(0)  # Rewind the buffer to the beginning so it's ready for reading
     return buffer
+
+# This function can be used in streamlit
+def generate_image_mosiac(input_file, light, dark, correction, calCurve0):
+    # flat field correction
+    ffieldIm = TrashIm.ffield(input_file,light,dark)
+    bands = [609.0, 625.6, 648.0, 666.3, 683.9, 700.8, 718.9, 736.6, 754.1, 770.1, 786.2, 802.4, 818.3, 833.1, 849.4]
+    # interpolate
+    wb = TrashIm.interp(ffieldIm)
+    # calibration and correction
+    imageMosaic = wb.copy()
+    test = np.dot(imageMosaic,correction.T)
+    imageMosaic = test/calCurve0
+    return imageMosaic
+
+# this function needs to be added to streamlit as well
+def combine_mosiac_and_therm(image_mosiac, therm,H):
+    therm = np.reshape(therm, (therm.shape[0], therm.shape[1],1))
+    dstMS, dstTH,dstC = TrashIm.undistort(image_mosiac,therm,color=0)
+    imwarp = TrashIm.applyHom(dstTH,H,dstMS.shape[1],dstMS.shape[0])
+    fullIm = TrashIm.stack(dstMS,imwarp)
+    return fullIm

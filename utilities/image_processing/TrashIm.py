@@ -212,20 +212,20 @@ def ffield(imageMosaic,light,dark):
 
 
 def undistort(imageMosaic,therm,color): ###undistort thermal and multispectral images -- uses calibration files
-    THnewMat = np.load('CamMatrices\\Therm\\newCamFull.npy')
-    THroi = np.load('CamMatrices\\Therm\\roiFull.npy')
-    THmtx = np.load('CamMatrices\\Therm\\mtxFull.npy')
-    THdist = np.load('CamMatrices\\Therm\\distFull.npy')
+    THnewMat = np.load('utilities/image_processing/CamMatrices/Therm/newCamFull.npy')
+    THroi = np.load('utilities/image_processing/CamMatrices/Therm/roiFull.npy')
+    THmtx = np.load('utilities/image_processing/CamMatrices/Therm/mtxFull.npy')
+    THdist = np.load('utilities/image_processing/CamMatrices/Therm/distFull.npy')
 
-    MSnewMat = np.load('CamMatrices\\MultiSpec\\newcam.npy')
-    MSroi = np.load('CamMatrices\\MultiSpec\\roi.npy')
-    MSmtx = np.load('CamMatrices\\MultiSpec\\mtx.npy')
-    MSdist = np.load('CamMatrices\\MultiSpec\\dist.npy')
+    MSnewMat = np.load('utilities/image_processing/CamMatrices/MultiSpec/newCam.npy')
+    MSroi = np.load('utilities/image_processing/CamMatrices/MultiSpec/roi.npy')
+    MSmtx = np.load('utilities/image_processing/CamMatrices/MultiSpec/mtx.npy')
+    MSdist = np.load('utilities/image_processing/CamMatrices/MultiSpec/dist.npy')
 
-    CnewMat = np.load('CamMatrices\\Color\\newCamFull3b5.npy')
-    Croi = np.load('CamMatrices\\Color\\roiFull3b5.npy')
-    Cmtx = np.load('CamMatrices\\Color\\mtxFull3b5.npy')
-    Cdist = np.load('CamMatrices\\Color\\distFull3b5.npy')
+    CnewMat = np.load('utilities/image_processing/CamMatrices/Color/newCamFull3b5.npy')
+    Croi = np.load('utilities/image_processing/CamMatrices/Color/roiFull3b5.npy')
+    Cmtx = np.load('utilities/image_processing/CamMatrices/Color/mtxFull3b5.npy')
+    Cdist = np.load('utilities/image_processing/CamMatrices/Color/distFull3b5.npy')
 
 
 
