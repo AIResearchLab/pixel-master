@@ -8,31 +8,31 @@ def load_files_for_image_processing():
     # Load 'dark' image array only if not in session state
     if 'dark' not in st.session_state:
         dark_files = [
-            'utilities\\image_processing\\utilImages\\darkmosaic.npy',
-            'utilities\\image_processing\\utilImages\\darkmosaic1.npy',
-            'utilities\\image_processing\\utilImages\\darkmosaic2.npy'
+            'utilities/image_processing/utilImages/darkmosaic.npy',
+            'utilities/image_processing/utilImages/darkmosaic1.npy',
+            'utilities/image_processing/utilImages/darkmosaic2.npy'
         ]
         st.session_state.dark = sum(np.load(file) for file in dark_files) / 3.0
 
     # Load 'light' image array only if not in session state
     if 'light' not in st.session_state:
-        st.session_state.light = np.load('utilities\\image_processing\\utilImages\\12_07_dfield.npy')
+        st.session_state.light = np.load('utilities/image_processing/utilImages/12_07_dfield.npy')
 
     # Load calibration curve only if not in session state
     if 'calCurve0' not in st.session_state:
-        st.session_state.calCurve0 = np.load('utilities\\image_processing\\utilImages\\calCurve.npy')
+        st.session_state.calCurve0 = np.load('utilities/image_processing/utilImages/calCurve.npy')
 
     # Load correction arrays only if not in session state
     if 'correction' not in st.session_state:
-        c0 = np.load('utilities\\image_processing\\utilImages\\correction0.npy')
-        c1 = np.load('utilities\\image_processing\\utilImages\\correction1.npy')
+        c0 = np.load('utilities/image_processing/utilImages/correction0.npy')
+        c1 = np.load('utilities/image_processing/utilImages/correction1.npy')
         st.session_state.correction = (c0 + c1) / 2.0
 
     # Load homography matrices only if not in session state
     if 'H' not in st.session_state:
-        st.session_state.H = np.load('utilities\\image_processing\\CamMatrices\\HomographyTherm2.npy')
+        st.session_state.H = np.load('utilities/image_processing/CamMatrices/HomographyTherm2.npy')
     if 'H1' not in st.session_state:
-        st.session_state.H1 = np.load('utilities\\image_processing\\CamMatrices\\HomographyColor.npy')
+        st.session_state.H1 = np.load('utilities/image_processing/CamMatrices/HomographyColor.npy')
 
 
 def img_he(img):
